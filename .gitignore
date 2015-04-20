@@ -1,0 +1,7 @@
+venv
+*.pyc
+staticfiles
+*~
+*.swp
+*#
+migrations
