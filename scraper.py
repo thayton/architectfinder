@@ -42,6 +42,10 @@ class ArchitectFinderScraper(object):
 
     def scrape_state_firms(self, state_item):
         self.br.open(self.url)
+
+        s = soupify(self.br.response().read())
+        saved_form = s.find('form', id='aspnetForm').prettify()
+
         self.br.select_form('aspnetForm')
         self.br.form.new_control('hidden', '__EVENTTARGET',   {'value': ''})
         self.br.form.new_control('hidden', '__EVENTARGUMENT', {'value': ''})
@@ -95,8 +99,7 @@ class ArchitectFinderScraper(object):
             event_target = m.group(1)
 
             # Regenerate form for next page
-            form = s.find('form', id='aspnetForm').prettify()
-            html = form.encode('utf8')
+            html = saved_form.encode('utf8')
             resp = mechanize.make_response(html, [("Content-Type", "text/html")],
                                            self.br.geturl(), 200, "OK")
 
