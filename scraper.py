@@ -1,4 +1,5 @@
-#!/usr/bin/env python                                                                                                                                                                
+#!/usr/bin/env python
+
 """
 Python script for scraping the results from http://architectfinder.aia.org/frmSearch.aspx
 """
