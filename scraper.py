@@ -9,23 +9,7 @@ import re
 import urlparse
 import mechanize
 
-from bs4 import BeautifulSoup, Comment, Tag
-
-def soupify(page):
-    s = BeautifulSoup(page)
-
-    # Remove unwanted tags
-    tags = s.findAll(lambda tag: tag.name == 'script' or \
-                                 tag.name == 'style')
-    for t in tags:
-        t.extract()
-        
-    # Remove comments
-    comments = s.findAll(text=lambda text:isinstance(text, Comment))
-    for c in comments:
-        c.extract()
-
-    return s
+from bs4 import BeautifulSoup
 
 class ArchitectFinderScraper(object):
     def __init__(self):
@@ -43,16 +27,14 @@ class ArchitectFinderScraper(object):
     def scrape_state_firms(self, state_item):
         self.br.open(self.url)
 
-        s = soupify(self.br.response().read())
+        s = BeautifulSoup(self.br.response().read())
         saved_form = s.find('form', id='aspnetForm').prettify()
 
         self.br.select_form('aspnetForm')
-        self.br.form.new_control('hidden', '__EVENTTARGET',   {'value': ''})
-        self.br.form.new_control('hidden', '__EVENTARGUMENT', {'value': ''})
-        self.br.form.new_control('hidden', '__ASYNCPOST',     {'value': 'true'})
+        self.br.form['ctl00$ContentPlaceHolder1$drpState'] = [ state_item.name ]
+        self.br.form.new_control('hidden', '__ASYNCPOST', {'value': 'true'})
         self.br.form.new_control('hidden', 'ctl00$ScriptManager1', {'value': 'ctl00$ScriptManager1|ctl00$ContentPlaceHolder1$btnSearch'})
         self.br.form.fixup()
-        self.br.form['ctl00$ContentPlaceHolder1$drpState'] = [ state_item.name ]
 
         ctl = self.br.form.find_control('ctl00$ContentPlaceHolder1$btnfrmSearch')
         self.br.form.controls.remove(ctl)
