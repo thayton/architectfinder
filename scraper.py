@@ -115,7 +115,7 @@ class ArchitectFinderScraper(object):
         Then we iterate through each state and submit the form for that state.
         
         For each state form submission we scrape all of the results via
-        scrape_firm_page() handling pagination in the process.
+        scrape_state_firms() handling pagination in the process.
         '''
         state_items = self.get_state_items()
         for state_item in state_items:
