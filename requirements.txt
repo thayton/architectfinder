@@ -1,2 +1,3 @@
 beautifulsoup4==4.3.2
 mechanize==0.2.5
+selenium==2.45.0
